@@ -38,6 +38,11 @@ module GoogleBooks
         expect(example.isbn_13).to eq example.isbn
       end
 
+      it "should return a page number if one is found" do
+        expect(example).to respond_to(:page_number)
+        expect(example.page_number).to be_nil
+      end
+
       describe "image_link" do
         it "should have all zoom varieties and show 1 as a default" do
           expect(example.image_link).to include "zoom=1"
