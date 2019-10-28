@@ -45,9 +45,9 @@ module GoogleBooks
     end
 
     def get_page_number
-      return nil unless @volume_info.preview_link
+      return nil unless @volume_info['previewLink']
 
-      preview_link_params = CGI::parse(@volumne_info.preview_link)
+      preview_link_params = CGI::parse(@volumne_info['previewLink'])
 
       return nil unless preview_link_params.key? 'pg'
       return nil unless preview_link_params['pg'].length > 0
