@@ -3,3 +3,7 @@
 Gemfile.lock
 pkg/*
 .travis.yml
+
+# Ignore swp files from vim
+*.swp
+*.swo
