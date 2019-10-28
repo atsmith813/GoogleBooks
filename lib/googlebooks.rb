@@ -8,7 +8,7 @@ module GoogleBooks
 
   include HTTParty
   format :json
-  
+
   class << self
 
     attr_accessor :parameters
@@ -23,12 +23,18 @@ module GoogleBooks
     # * :api_key passes the application specific Google API key
     #
     # 3rd parameter optionally passes user's IP address
-    # * User IP may be require in order for request to be made to the
+    # * User IP may be required in order for request to be made to the
     #   Google API from applications residing on decentralized cloud servers
     #   See http://www.google.com/support/forum/p/booksearch-apis/thread?tid=2034bed9a98c15cb&hl=en
+    #
+    # 4th parameter optionally passes referer
+    # * Referer may be required in order for request to be made to the
+    #   Google API using restricted API keys
+    #   See http://www.google.com/support/forum/p/booksearch-apis/thread?tid=2034bed9a98c15cb&hl=en
 
-    def search(query, options = {}, remote_ip = nil)
+    def search(query, options = {}, remote_ip = nil, referer = nil)
       (headers 'X-Forwarded-For' => remote_ip.to_s) unless remote_ip.nil?
+      (headers 'Referer' => referer.to_s) unless referer.nil?
       self.parameters = { 'q' => query }
       options[:page] ||= 1
       options[:count] ||= 5
@@ -53,7 +59,7 @@ module GoogleBooks
     # Queries the new Google API. The former Google Book Search API is deprecated
     # http://code.google.com/apis/books/docs/gdata/developers_guide_protocol.html
     def url
-      URI::HTTPS.build(:host  => 'www.googleapis.com',
+      URI::HTTPS.build(:host => 'www.googleapis.com',
                       :path  => '/books/v1/volumes',
                       :query => query)
     end
