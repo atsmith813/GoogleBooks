@@ -22,17 +22,17 @@ module GoogleBooks
     # * :page passes the page number (default=1)
     # * :api_key passes the application specific Google API key
     #
-    # 3rd parameter optionally passes user's IP address
-    # * User IP may be required in order for request to be made to the
+    # The remote_ip keyword argument passes user's IP address
+    # * User IP may be required in order for the request to be made to the
     #   Google API from applications residing on decentralized cloud servers
     #   See http://www.google.com/support/forum/p/booksearch-apis/thread?tid=2034bed9a98c15cb&hl=en
     #
-    # 4th parameter optionally passes referer
-    # * Referer may be required in order for request to be made to the
+    # The referer keyword argument passes referer
+    # * Referer may be required in order for the request to be made to the
     #   Google API using restricted API keys
     #   See http://www.google.com/support/forum/p/booksearch-apis/thread?tid=2034bed9a98c15cb&hl=en
 
-    def search(query, options = {}, remote_ip = nil, referer = nil)
+    def search(query, options = {}, remote_ip: nil, referer: nil)
       (headers 'X-Forwarded-For' => remote_ip.to_s) unless remote_ip.nil?
       (headers 'Referer' => referer.to_s) unless referer.nil?
       self.parameters = { 'q' => query }
