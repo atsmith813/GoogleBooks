@@ -1,7 +1,7 @@
 module GoogleBooks
 
   class Item
-    attr_reader :kind, :id, :title, :titles_array, :authors, :authors_array, :publisher, :published_date, :description, :isbn, :isbn_10, :isbn_13, :other_identifier, :page_count, :print_type, :categories, :average_rating, :ratings_count, :language, :preview_link, :info_link, :sale_info
+    attr_reader :kind, :id, :title, :titles_array, :authors, :authors_array, :publisher, :published_date, :description, :isbn, :isbn_10, :isbn_13, :other_identifier, :page_count, :page_number, :print_type, :categories, :average_rating, :ratings_count, :language, :preview_link, :info_link, :sale_info
 
     def initialize(item)
       @item = item
@@ -33,6 +33,7 @@ module GoogleBooks
       retrieve_industry_identifiers
 
       @page_count = @volume_info['pageCount']
+      @page_number = get_page_number
       @print_type = @volume_info['printType']
       @categories = [@volume_info['categories']].flatten.join(', ')
       @average_rating = @volume_info['averageRating']
@@ -41,6 +42,20 @@ module GoogleBooks
       @preview_link = @volume_info['previewLink']
       @info_link = @volume_info['infoLink']
       @sale_info = @item['saleInfo']
+    end
+
+    def get_page_number
+      return nil unless @volume_info.preview_link
+
+      preview_link_params = CGI::parse(@volumne_info.preview_link)
+
+      return nil unless preview_link_params.key? 'pg'
+      return nil unless preview_link_params['pg'].length > 0
+
+      page_number_string = preview_link_params['pg'].first
+      page_number_string.slice! 'PA'
+
+      page_number_string.to_i
     end
 
     def build_title
